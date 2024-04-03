@@ -15,9 +15,9 @@ on:
       - name: Run validation deployment check
         id: validation
         run: |
-          # Add commands here to check the validation deployment status
-          # For example, you might use a script or call an API to check the status
-          # Set an output variable based on the status (e.g., 'status' variable)
+           deployment_status=$(./check_deployment_status.sh)
+          echo "Deployment status: $deployment_status"
+          echo "::set-output name=status::$deployment_status"
           status="Pass"  # Example status, replace with actual logic
 
       - name: Report status
