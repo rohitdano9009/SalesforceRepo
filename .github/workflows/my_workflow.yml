@@ -2,4 +2,26 @@ name: Validation Deployment Check
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Run every 5 minutes
+    - cron: '*/5 * * * *'  
+
+    jobs:
+  validation_check_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run validation deployment check
+        id: validation
+        run: |
+          # Add commands here to check the validation deployment status
+          # For example, you might use a script or call an API to check the status
+          # Set an output variable based on the status (e.g., 'status' variable)
+          status="Pass"  # Example status, replace with actual logic
+
+      - name: Report status
+        if: steps.validation.outputs.status != ''  # Check if status variable is set
+        run: |
+          echo "Validation deployment status: ${{ steps.validation.outputs.status }}"
+
