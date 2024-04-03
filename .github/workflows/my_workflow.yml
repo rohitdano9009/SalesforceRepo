@@ -1,27 +1,31 @@
 name: Validation Deployment Check
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'  
+schedule:
+  - cron: '*/5 * * * *'  # Run every 5 minutes
 
-    jobs:
-  validation_check_job:
-    runs-on: ubuntu-latest
+jobs:
+validation_check_job:
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Run validation deployment check
-        id: validation
-        run: |
-           deployment_status=$(./check_deployment_status.sh)
-          echo "Deployment status: $deployment_status"
-          echo "::set-output name=status::$deployment_status"
-          status="Pass"  # Example status, replace with actual logic
+    - name: Run validation deployment check
+      id: validation
+      run: |
+        # Add commands here to check the validation deployment status
+        # For example, using a script or calling an API
+        # Replace the example command below with your actual command or script
+        deployment_status=$(./check_deployment_status.sh)
+        echo "Deployment status: $deployment_status"
+        echo "::set-output name=status::$deployment_status"
 
-      - name: Report status
-        if: steps.validation.outputs.status != ''  # Check if status variable is set
-        run: |
-          echo "Validation deployment status: ${{ steps.validation.outputs.status }}"
 
+- name: Execute Command on Pass
+if: steps.validation.outputs.status == 'Pass'
+run: |
+  echo "Deployment passed! Executing the command..."
+  # Replace the command below with your actual Salesforce command using Apex
+  echo "System.schedule('Integration Services Retry Schedule Job', '0 0 * ?', new sf_lms_IntegrationServiceRetrySchedule(20));"
